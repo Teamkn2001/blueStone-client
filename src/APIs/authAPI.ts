@@ -24,8 +24,9 @@ export const loginUser = async (userData : LoginForm) => {
     }
 }
 
-export const requestOTP = async (email : string) => {
+export const requestOTP = async (email : any) => {
     try {
+        console.log(`email at requestOTP: ${email}`)
         const res = await axios.post('/auth/request-token', email)
 
         return res.data;

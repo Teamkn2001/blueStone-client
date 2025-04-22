@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Contact } from "lucide-react";
 import ContactSection from "./ContactSection";
 import { registerUser } from "@/APIs/authAPI";
+import { useNavigate } from "react-router-dom";
 
-export default function RegisterForm({ setMode }: { setMode: React.Dispatch<React.SetStateAction<"register" | "login" | "reset">>} ) {
+export default function RegisterForm() {
   const [registerForm, setRegisterForm] = useState({
     username: "",
     password: "",
     confirmPassword: "",
     email: "",
   });
+
+  const navigate = useNavigate();
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -58,7 +60,7 @@ export default function RegisterForm({ setMode }: { setMode: React.Dispatch<Reac
       if (register.status == "success" ) {
         alert(`Register success`);
       }
-      setMode("login");
+      navigate('/login')
     } catch (error : any) {
       alert("Registration failed. Please try again." + " "+error?.response?.data?.msg);
       console.error("Registration error:", error.response?.data?.msg);
@@ -75,7 +77,7 @@ export default function RegisterForm({ setMode }: { setMode: React.Dispatch<Reac
 
   return (
     <>
-      <h2 className="text-xl font-semibold text-center mb-8">Register</h2>
+      <h2 className="text-2xl font-bold text-center mb-8">Register</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Username field */}
@@ -116,14 +118,14 @@ export default function RegisterForm({ setMode }: { setMode: React.Dispatch<Reac
             value={registerForm.email}
             onChange={(e) => onChange(e)}
             className={getInputClass(registerForm.email)}
-            placeholder="email"
+            placeholder="Email"
           />
         </div>
 
         {/* Register Button */}
         <Button
           type="submit"
-          className="w-full bg-[#125D87] hover:bg-[#0D4362] text-white rounded-sm py-2 mt-4"
+          className="w-full bg-[#125D87] hover:bg-[#0D4362] text-white rounded-sm py-2 mb-8 "
         >
           Register
         </Button>

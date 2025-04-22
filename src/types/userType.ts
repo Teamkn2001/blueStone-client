@@ -12,7 +12,7 @@ export interface LoginForm {
 
 export interface ResetPasswordForm {
     email: string;
-    token: string;
+    verifyCode: string;
     newPassword: string;
     confirmPassword: string;
 }

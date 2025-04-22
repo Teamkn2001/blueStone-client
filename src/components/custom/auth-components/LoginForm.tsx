@@ -1,23 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import ContactSection from "./ContactSection";
 import { loginUser } from "@/APIs/authAPI";
+import { useNavigate } from "react-router-dom";
 
-export default function LoginForm({ setMode }: { setMode: React.Dispatch<React.SetStateAction<"register" | "login" | "reset">>} ) {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [rememberMe, setRememberMe] = React.useState(false);
+export default function LoginForm( ) {
+  const [loginForm, setLoginForm] = useState({
+    username: "",
+    password: "",
+  });
+
+  const [rememberMe, setRememberMe] = useState(true);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login submitted:", { username, password, rememberMe });
 
     const loginData = {
-      username: username,
-      password: password,
+      username: loginForm.username,
+      password: loginForm.password,
+      rememberMe: rememberMe,
     };
 
     try {
@@ -25,23 +31,29 @@ export default function LoginForm({ setMode }: { setMode: React.Dispatch<React.S
       if (login.status == "success") {
         alert(`Login success`);
       }
-    } catch (error) {
-      alert("Login failed. Please check your credentials.");
-      console.error("Login error:", error);
+      // const jwtToken = login.data.user.token; // got token 
+    } catch (error : any) {
+      alert(`Login failed. Please check your credentials. ${error.response?.data?.msg}`);
+      console.error("Login error:", error.response?.data?.msg);
     }
   };
 
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLoginForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
   return (
     <>
-      <h2 className="text-xl font-semibold text-center mb-8">Login</h2>
+      <h2 className="text-2xl font-bold text-center mb-8">Login</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Username field */}
         <div className="mb-4">
           <Input
+          name="username"
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={loginForm.username}
+            onChange={(e) => onChange(e)}
             className="w-full border border-gray-300 rounded-sm px-3 py-2"
             placeholder="Username"
           />
@@ -50,20 +62,20 @@ export default function LoginForm({ setMode }: { setMode: React.Dispatch<React.S
           </div>
         </div>
 
-        {/* Password field with label */}
         <div className="mb-4">
           <Input
+            name="password"
             id="password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={loginForm.password}
+            onChange={(e) => onChange(e)}
             className="w-full border border-gray-300 rounded-sm px-3 py-2"
             placeholder="Password"
           />
         </div>
 
         {/* Remember Me checkbox */}
-        <div className="flex items-center space-x-2 mb-6">
+        <div className="flex items-center justify-center space-x-2 mb-6">
           <Checkbox
             id="remember-me"
             checked={rememberMe}
@@ -78,7 +90,6 @@ export default function LoginForm({ setMode }: { setMode: React.Dispatch<React.S
           </Label>
         </div>
 
-        {/* Login Button */}
         <Button
           type="submit"
           className="w-full bg-[#125D87] hover:bg-[#0D4362] text-white rounded-sm py-2"
@@ -86,8 +97,8 @@ export default function LoginForm({ setMode }: { setMode: React.Dispatch<React.S
           Login
         </Button>
 
-        {/* Forgotten Password Link */}
-        <div className="text-center mt-4 cursor-pointer" onClick={() => setMode("reset")}>
+        {/* Forgotten Password */}
+        <div className="text-center my-6 mb-8 cursor-pointer"  onClick={() => navigate("/resetPwd")}>
           <p className="text-xs text-blue-500 underline">
             Forgotten password?
           </p>
