@@ -52,7 +52,6 @@ export default function RegisterForm() {
       confirmPassword: registerForm.confirmPassword,
       email: registerForm.email,
     };
-    console.log("Registration submitted:", registerData);
 
     try {
       const register = await registerUser(registerData);
